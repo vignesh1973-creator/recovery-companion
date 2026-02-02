@@ -79,7 +79,10 @@ const CheckInModal = ({ date, existingData, onClose, onSave }) => {
             const quote = await fetchReward(type);
             setSelectedQuote(quote);
 
-            onSave(date, 'success', journal);
+            // SAVE BOTH: The User's Journal + The Quote they received
+            const fullEntry = `${journal}\n\n⚔️ Daily Armor:\n"${quote.text}" - ${quote.author}`;
+            onSave(date, 'success', fullEntry);
+
             setStep('reward');
         } catch (e) {
             console.error(e);

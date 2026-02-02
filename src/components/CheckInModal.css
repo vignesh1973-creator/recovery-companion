@@ -132,6 +132,8 @@ textarea {
 .quote-text {
     font-size: 1.1rem;
     font-style: italic;
+    white-space: pre-wrap;
+    /* Preserves newlines in journal */
     margin-bottom: var(--spacing-sm);
 }
 
