@@ -127,6 +127,14 @@ function App() {
           onSave={handleSaveDay}
         />
       )}
+
+      {milestoneData && (
+        <MilestoneModal
+          type={milestoneData.type}
+          data={milestoneData}
+          onClose={() => setMilestoneData(null)}
+        />
+      )}
     </div>
   );
 }
