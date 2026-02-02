@@ -4,7 +4,7 @@ import Countdown from './components/Countdown';
 import CheckInModal from './components/CheckInModal';
 import Sanctuary from './components/Sanctuary';
 import PanicButton from './components/PanicButton';
-import useProgress from './hooks/useProgress';
+import { useProgress } from './hooks/useProgress';
 import './App.css';
 import './components/Skeleton.css';
 
