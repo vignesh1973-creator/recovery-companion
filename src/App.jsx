@@ -3,6 +3,7 @@ import Calendar from './components/Calendar';
 import Countdown from './components/Countdown';
 import CheckInModal from './components/CheckInModal';
 import Sanctuary from './components/Sanctuary';
+import PanicButton from './components/PanicButton';
 import useProgress from './hooks/useProgress';
 import './App.css';
 import './components/Skeleton.css';
@@ -52,9 +53,13 @@ function App() {
     );
   }
 
+  // Get data for selected date (if any)
+  const selectedDateData = selectedDate ? progress[selectedDate.toISOString().split('T')[0]] : null;
+
   return (
     <div className="app-container">
       <header className="app-header">
+        <PanicButton />
         <h1>Recovery Companion</h1>
         <Countdown targetDate={targetDate} />
       </header>
@@ -92,6 +97,7 @@ function App() {
       {selectedDate && (
         <CheckInModal
           date={selectedDate}
+          existingData={selectedDateData}
           onClose={handleCloseModal}
           onSave={handleSaveDay}
         />

@@ -1,0 +1,87 @@
+.btn-panic {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid var(--error);
+    color: var(--error);
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    z-index: 1000;
+    animation: pulseRed 2s infinite;
+}
+
+@keyframes pulseRed {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+.panic-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #1a0505;
+    /* Deep red black */
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.breath-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.breath-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ef4444 0%, transparent 70%);
+    border: 2px solid #ef4444;
+    box-shadow: 0 0 30px #ef4444;
+    transition: all 4s ease-in-out;
+}
+
+.breath-circle.expand {
+    transform: scale(1.5);
+    opacity: 1;
+}
+
+.breath-circle.contract {
+    transform: scale(0.8);
+    opacity: 0.5;
+}
+
+.breath-container h2 {
+    font-size: 2rem;
+    color: #ef4444;
+}
+
+.distraction-container {
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.distraction-container h2 {
+    color: var(--accent-gold);
+    margin-bottom: var(--spacing-lg);
+}

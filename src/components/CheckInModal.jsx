@@ -4,9 +4,9 @@ import { fetchReward } from '../services/api';
 import { motivationalVideos } from '../data/videos';
 import confetti from 'canvas-confetti';
 
-const CheckInModal = ({ date, onClose, onSave }) => {
+const CheckInModal = ({ date, existingData, onClose, onSave }) => {
     const [journal, setJournal] = useState('');
-    const [step, setStep] = useState('loading'); // loading -> locked -> question -> journal -> reward -> video
+    const [step, setStep] = useState('loading'); // loading -> locked -> question -> journal -> reward -> video -> view
     const [selectedQuote, setSelectedQuote] = useState(null);
     const [currentVideo, setCurrentVideo] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -22,7 +22,13 @@ const CheckInModal = ({ date, onClose, onSave }) => {
         const currentHour = now.getHours();
         const targetHour = 21; // 9 PM
 
-        // If it's today and before 9 PM, show Locked state + Daily Armor
+        // 1. If we already have data (Success/Fail), show View Mode
+        if (existingData) {
+            setStep('view');
+            return;
+        }
+
+        // 2. If it's today and before 9 PM, show Locked state
         if (isToday && currentHour < targetHour) {
             setHoursLeft(targetHour - currentHour);
             await loadDailyArmor();
@@ -199,3 +205,15 @@ const CheckInModal = ({ date, onClose, onSave }) => {
 };
 
 export default CheckInModal;
+
+
+                {step === 'view' && existingData && (
+                    <div className='step-view'>
+                        <h2>{existingData.status === 'success' ? 'Victory Secured' : 'Day Lost'}</h2>
+                        <div className='quote-card' style={{ borderLeftColor: existingData.status === 'success' ? 'var(--success)' : 'var(--error)' }}>
+                            <p className='quote-text'>"{existingData.journal}"</p>
+                        </div>
+                        <p className='subtext'>{new Date(existingData.timestamp).toLocaleTimeString()}</p>
+                        <button className='btn-primary' onClick={onClose}>Close</button>
+                    </div>
+                )}
