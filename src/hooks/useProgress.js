@@ -85,7 +85,7 @@ export const useProgress = () => {
     // 5. Auto-Fail Missed Days (On Mount)
     useEffect(() => {
         const checkMissed = () => {
-            const start = new Date('2026-02-01T00:00:00');
+            const start = new Date('2026-02-02T00:00:00');
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
