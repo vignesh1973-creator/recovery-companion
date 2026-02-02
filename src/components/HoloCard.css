@@ -1,0 +1,126 @@
+.holo-card-container {
+    width: 300px;
+    height: 450px;
+    perspective: 1000px;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.holo-card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 20px;
+    border: 2px solid #00ff41;
+    background: rgba(0, 20, 0, 0.9);
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.5), inset 0 0 20px rgba(0, 255, 65, 0.2);
+    transition: transform 0.1s ease-out;
+    transform-style: preserve-3d;
+    overflow: hidden;
+}
+
+.holo-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.1;
+    z-index: 0;
+}
+
+.holo-char {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: auto;
+    z-index: 1;
+    filter: drop-shadow(0 0 10px #00ff41);
+    transform: translateZ(30px);
+    /* 3D pop */
+}
+
+.holo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 8;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+}
+
+.holo-content {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    z-index: 2;
+    transform: translateZ(50px);
+}
+
+.holo-content h3 {
+    color: #00ff41;
+    text-transform: uppercase;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-shadow: 0 0 5px #00ff41;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 0.8rem;
+    color: #fff;
+}
+
+.stat-row span {
+    width: 50px;
+    font-weight: bold;
+}
+
+.stat-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(0, 255, 65, 0.2);
+    border-radius: 3px;
+    margin-left: 10px;
+    overflow: hidden;
+}
+
+.stat-fill {
+    height: 100%;
+    background: #00ff41;
+    box-shadow: 0 0 5px #00ff41;
+}
+
+/* Holographic Scanline Animation */
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: rgba(0, 255, 65, 0.3);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+    z-index: 10;
+    opacity: 0.5;
+    animation: scan 3s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes scan {
+    0% {
+        top: -10%;
+    }
+
+    100% {
+        top: 110%;
+    }
+}

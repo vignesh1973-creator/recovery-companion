@@ -5,14 +5,38 @@ import CheckInModal from './components/CheckInModal';
 import Sanctuary from './components/Sanctuary';
 import PanicButton from './components/PanicButton';
 import { useProgress } from './hooks/useProgress';
+import MilestoneModal from './components/MilestoneModal';
+import { MILESTONES } from './data/milestones';
 import './App.css';
 import './components/Skeleton.css';
 
 function App() {
   const { progress, saveDay, streak, targetDate } = useProgress();
   const [selectedDate, setSelectedDate] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [milestoneData, setMilestoneData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('calendar'); // 'calendar' | 'sanctuary'
+
+  // Check Milestones
+  useEffect(() => {
+    if (streak > 0) {
+      // Find if current streak matches a milestone
+      const milestone = MILESTONES.find(m => m.day === streak);
+
+      if (milestone) {
+        // Check if already seen using LocalStorage
+        const seenKey = `milestone_seen_${streak}`;
+        const hasSeen = localStorage.getItem(seenKey);
+
+        if (!hasSeen) {
+          // Unlock!
+          setMilestoneData(milestone);
+          localStorage.setItem(seenKey, 'true');
+        }
+      }
+    }
+  }, [streak]);
 
   useEffect(() => {
     // Simulate premium "boot up" time

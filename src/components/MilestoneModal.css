@@ -1,0 +1,181 @@
+.milestone-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.milestone-container {
+    width: 90%;
+    max-width: 450px;
+    /* Small initially */
+    background: radial-gradient(circle at center, #0a2e0a 0%, #000000 100%);
+    border: 2px solid #00ff41;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 0 50px rgba(0, 255, 65, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: max-width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.milestone-container.expanded {
+    max-width: 900px;
+    /* Expands when interacted */
+}
+
+.alien-showcase-interactive {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.scene-wrapper {
+    width: 100%;
+    transition: width 0.5s ease;
+}
+
+.milestone-container.expanded .scene-wrapper {
+    width: 50%;
+}
+
+.alien-reveal {
+    width: 0;
+    opacity: 0;
+    padding-left: 0;
+    overflow: hidden;
+    transform: translateX(20px);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+    /* Slight delay */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+.alien-reveal.visible {
+    width: 50%;
+    opacity: 1;
+    padding-left: 30px;
+    transform: translateX(0);
+}
+
+.alien-reveal h3 {
+    color: #fff;
+    font-size: 2rem;
+    margin: 0;
+    text-shadow: 0 0 10px #00ff41;
+}
+
+.stat-bars {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    color: #888;
+    font-size: 0.9rem;
+    font-family: monospace;
+}
+
+.stat-row span {
+    width: 40px;
+}
+
+.bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.bar div {
+    height: 100%;
+    background: #00ff41;
+    box-shadow: 0 0 8px #00ff41;
+}
+
+.milestone-header p {
+    color: #888;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.milestone-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+}
+
+.alien-showcase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.alien-quote {
+    color: #fff;
+    font-style: italic;
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.video-wrapper {
+    width: 100%;
+    aspect-ratio: 9/16;
+    /* For Shorts */
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.btn-collect {
+    background: #00ff41;
+    color: #000;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Courier New', monospace;
+}
+
+.btn-collect:hover {
+    background: #fff;
+    box-shadow: 0 0 20px #fff;
+    transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
