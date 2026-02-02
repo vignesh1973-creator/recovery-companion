@@ -6,7 +6,7 @@ import Sanctuary from './components/Sanctuary';
 import PanicButton from './components/PanicButton';
 import { useProgress } from './hooks/useProgress';
 import MilestoneModal from './components/MilestoneModal';
-import { MILESTONES } from './data/milestones';
+import { getMilestone } from './data/milestones';
 import './App.css';
 import './components/Skeleton.css';
 
@@ -22,7 +22,7 @@ function App() {
   useEffect(() => {
     if (streak > 0) {
       // Find if current streak matches a milestone
-      const milestone = MILESTONES.find(m => m.day === streak);
+      const milestone = getMilestone(streak);
 
       if (milestone) {
         // Check if already seen using LocalStorage
