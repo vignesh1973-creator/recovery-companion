@@ -48,9 +48,14 @@ const CheckInModal = ({ date, onClose, onSave }) => {
         if (success) {
             setStep('journal');
         } else {
-            onSave(date, 'fail', 'Relapsed.');
-            onClose();
+            // Don't save yet, encourage them first
+            setStep('fail_confirm');
         }
+    };
+
+    const confirmFail = () => {
+        onSave(date, 'fail', 'Relapsed.');
+        onClose();
     };
 
     const handleSubmitJournal = async () => {
@@ -90,6 +95,18 @@ const CheckInModal = ({ date, onClose, onSave }) => {
                 <button className="close-btn" onClick={onClose}>&times;</button>
 
                 {step === 'loading' && <p>Loading...</p>}
+
+                {step === 'fail_confirm' && (
+                    <div className="step-fail">
+                        <h2>Don't Give Up.</h2>
+                        <p className="subtext">A slip is not the end. It's a lesson.</p>
+                        <div className="quote-card fail-card">
+                            <p className="quote-text">"Failure is simply the opportunity to begin again, this time more intelligently."</p>
+                        </div>
+                        <button className="btn-fail" onClick={confirmFail}>Mark Day as Failed</button>
+                        <button className="btn-secondary" onClick={() => setStep('question')}>Wait, I want to rethink</button>
+                    </div>
+                )}
 
                 {step === 'locked' && (
                     <div className="step-locked">

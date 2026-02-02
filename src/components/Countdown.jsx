@@ -12,9 +12,7 @@ const GOALS = [
     "become unbreakable"
 ];
 
-const TARGET_DATE = new Date('2026-08-01T00:00:00');
-
-const Countdown = () => {
+const Countdown = ({ targetDate }) => {
     const [daysLeft, setDaysLeft] = useState(0);
     const [goalText, setGoalText] = useState(GOALS[0]);
 
@@ -23,7 +21,7 @@ const Countdown = () => {
         today.setHours(0, 0, 0, 0); // Start of today
 
         // Calculate difference
-        const diffTime = TARGET_DATE - today;
+        const diffTime = targetDate - today;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
         setDaysLeft(diffDays > 0 ? diffDays : 0);
@@ -31,7 +29,7 @@ const Countdown = () => {
         // Pick a random goal text
         const randomGoal = GOALS[Math.floor(Math.random() * GOALS.length)];
         setGoalText(randomGoal);
-    }, []);
+    }, [targetDate]);
 
     return (
         <div className="countdown-container">
