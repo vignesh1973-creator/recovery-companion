@@ -1,0 +1,40 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  text-align: center;
+  padding: 4rem 1rem 2rem;
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  /* Required for text-fill-color to work in some contexts or as fallback */
+  -webkit-text-fill-color: transparent;
+}
+
+.app-header p {
+  color: var(--text-secondary);
+  margin-top: var(--spacing-sm);
+  font-size: 1.1rem;
+}
+
+main {
+  flex: 1;
+}
+
+.app-footer {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: var(--spacing-xl);
+}
