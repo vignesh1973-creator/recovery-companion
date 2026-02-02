@@ -8,7 +8,17 @@ export const useProgress = () => {
     // 1. Load Progress (Optimistic UI: Load Local first, then BG Sync)
     const [progress, setProgress] = useState(() => {
         try {
-            return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+            const raw = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+            // Filter out any dates BEFORE the official start (e.g. Feb 1 auto-fails)
+            const clean = {};
+            const start = new Date('2026-02-02T00:00:00');
+            Object.keys(raw).forEach(key => {
+                const d = new Date(key);
+                if (d >= start) {
+                    clean[key] = raw[key];
+                }
+            });
+            return clean;
         } catch { return {}; }
     });
 

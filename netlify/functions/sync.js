@@ -2,11 +2,15 @@ const { Client } = require('pg');
 
 exports.handler = async (event, context) => {
     // 1. Connection Header (Secure way to get string)
+    // Debugging: Check if variable exists
+    console.log("DB URL Length:", process.env.DATABASE_URL ? process.env.DATABASE_URL.length : "Undefined");
+    console.log("DB URL Start:", process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 10) : "None");
+
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false // Required for some hosted Postgres providers from Serverless
-        }
+        // Neon handles SSL via the connection string params usually (`sslmode=require`)
+        // If that fails, we might need to uncomment the object below.
+        // ssl: { rejectUnauthorized: false } 
     });
 
     try {
