@@ -2,22 +2,48 @@ import { useState, useEffect } from 'react';
 
 const STORAGE_KEY = 'recovery_progress';
 const TARGET_DATE_KEY = 'recovery_target_date';
+const SYNC_API = '/.netlify/functions/sync';
 
 export const useProgress = () => {
-    // 1. Load Progress
+    // 1. Load Progress (Optimistic UI: Load Local first, then BG Sync)
     const [progress, setProgress] = useState(() => {
         try {
             return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
         } catch { return {}; }
     });
 
-    // 2. Load Target Date (Default: Aug 1, 2026)
     const [targetDate, setTargetDate] = useState(() => {
         const saved = localStorage.getItem(TARGET_DATE_KEY);
         return saved ? new Date(saved) : new Date('2026-08-01T00:00:00');
     });
 
-    // 3. Persist Changes
+    // 2. Initial Cloud Sync (On Mount)
+    useEffect(() => {
+        const syncFromCloud = async () => {
+            try {
+                const response = await fetch(SYNC_API);
+                if (response.ok) {
+                    const cloudData = await response.json();
+
+                    if (cloudData && cloudData.progress) {
+                        console.log("☁️ Cloud Data Received");
+                        // Merge or Overwrite? For now, Cloud wins if it has data.
+                        setProgress(cloudData.progress);
+                        if (cloudData.targetDate) {
+                            setTargetDate(new Date(cloudData.targetDate));
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Sync failed:", e);
+            }
+        };
+
+        syncFromCloud();
+    }, []);
+
+    // 3. Persist Changes (Local + Cloud)
+    // We defer the Cloud Sync to avoid spamming the database on every keystroke
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
     }, [progress]);
@@ -25,6 +51,27 @@ export const useProgress = () => {
     useEffect(() => {
         localStorage.setItem(TARGET_DATE_KEY, targetDate.toISOString());
     }, [targetDate]);
+
+    // Debounced Cloud Save
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const payload = {
+                progress,
+                targetDate: targetDate.toISOString()
+            };
+
+            fetch(SYNC_API, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            }).then(r => {
+                if (r.ok) console.log("☁️ Saved to Cloud");
+            }).catch(e => console.error("Cloud Save Failed", e));
+
+        }, 2000); // Wait 2s after last change before saving
+
+        return () => clearTimeout(timer);
+    }, [progress, targetDate]);
+
 
     // 4. Extend Target Helper
     const extendTargetDate = (days) => {
@@ -66,8 +113,11 @@ export const useProgress = () => {
             }
         };
 
-        checkMissed();
-    }, []); // Run once on mount
+        // Only run if we actually have some progress loaded (to avoid overwriting empty state)
+        if (Object.keys(progress).length > 0) {
+            checkMissed();
+        }
+    }, []);
 
     // 6. Calculate Streak
     const calculateStreak = () => {
@@ -103,16 +153,8 @@ export const useProgress = () => {
 
         if (status === 'fail') {
             // RELAPSE LOGIC:
-            // "if he fails ... add streak days on later months"
             const currentStreak = calculateStreak();
-
-            // If current streak is 5, add 5 days. 
-            // If it's 0 (maybe just missed yesterday?), add 1 day or 0? 
-            // User implies penalty is proportional to "wasted" days.
-            // If streak is 0, he hasn't "wasted" a streak, but a fail is bad.
-            // Let's ensure at least 1 day penalty for a fail.
             const penalty = currentStreak > 0 ? currentStreak : 1;
-
             extendTargetDate(penalty);
         }
 
