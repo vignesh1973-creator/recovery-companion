@@ -1,30 +1,53 @@
 export const audioLibrary = [
     {
-        category: "Motivation (English)",
-        tracks: [
-            { id: 'm1', title: "Unbroken", artist: "Motivational Speech", src: "/audio/motivation_1.mp3" },
-            { id: 'm2', title: "Discipline is Freedom", artist: "Jocko Willink", src: "/audio/motivation_2.mp3" }
+        category: "Motivation",
+        playlists: [
+            {
+                id: 'sp1',
+                title: "Beast Mode",
+                embedUrl: "https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator&theme=0",
+                deepLink: "spotify:playlist:37i9dQZF1DX76Wlfdnj7AP"
+            },
+            {
+                id: 'sp2',
+                title: "Motivational Speech",
+                embedUrl: "https://open.spotify.com/embed/playlist/37i9dQZF1DXdxcBWuJkbcy?utm_source=generator&theme=0",
+                deepLink: "spotify:playlist:37i9dQZF1DXdxcBWuJkbcy"
+            }
         ]
     },
     {
         category: "Tamil Devotional",
-        tracks: [
-            { id: 't1', title: "Kanda Sashti Kavasam", artist: "Traditional", src: "/audio/tamil_1.mp3" },
-            { id: 't2', title: "Sivan Song", artist: "Traditional", src: "/audio/tamil_2.mp3" }
+        playlists: [
+            {
+                id: 'td1',
+                title: "Top Tamil Devotional",
+                embedUrl: "https://open.spotify.com/embed/playlist/37i9dQZF1DX5cO1uP1jZ9b?utm_source=generator&theme=0",
+                deepLink: "spotify:playlist:37i9dQZF1DX5cO1uP1jZ9b"
+            },
+            {
+                id: 'td2',
+                title: "Sivan Songs",
+                embedUrl: "https://open.spotify.com/embed/playlist/37i9dQZF1DWUm4K75W9tM6?utm_source=generator&theme=0",
+                deepLink: "spotify:playlist:37i9dQZF1DWUm4K75W9tM6"
+            }
         ]
     },
     {
-        category: "Hindi Songs",
-        tracks: [
-            { id: 'h1', title: "Lakshya (Title Track)", artist: "Shankar Ehsaan Loy", src: "/audio/hindi_1.mp3" },
-            { id: 'h2', title: "Arambh Hai Prachand", artist: "Piyush Mishra", src: "/audio/hindi_2.mp3" }
-        ]
-    },
-    {
-        category: "Audiobooks",
-        tracks: [
-            { id: 'b1', title: "Can't Hurt Me (Ch 1)", artist: "David Goggins", src: "/audio/book_1.mp3" },
-            { id: 'b2', title: "Atomic Habits (Summary)", artist: "James Clear", src: "/audio/book_2.mp3" }
+        category: "Audiobooks (Podcasts)",
+        playlists: [
+            {
+                id: 'bk1',
+                title: "The Mindset Mentor",
+                embedUrl: "https://open.spotify.com/embed/show/706hylM6zaDW8LtkWBbIpQ?utm_source=generator&theme=0",
+                deepLink: "spotify:show:706hylM6zaDW8LtkWBbIpQ"
+            },
+            {
+                id: 'bk2',
+                title: "7 Good Minutes",
+                embedUrl: "https://open.spotify.com/embed/show/0uI5Y33Vff64hR35Qn6E9l?utm_source=generator&theme=0",
+                deepLink: "spotify:show:0uI5Y33Vff64hR35Qn6E9l"
+            }
         ]
     }
 ];
