@@ -69,6 +69,7 @@ function App() {
           <Calendar
             progress={progress}
             streak={streak}
+            targetDate={targetDate}
             onDateClick={handleDateClick}
           />
         ) : (

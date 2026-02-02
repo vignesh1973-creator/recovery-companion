@@ -77,6 +77,20 @@
 
 .empty-slot {
     height: 80px;
+    cursor: not-allowed;
+}
+
+.target-day {
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+    position: relative;
+}
+
+.target-icon {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 0.8rem;
 }
 
 /* Specific styling for smaller month grids to fit more */
