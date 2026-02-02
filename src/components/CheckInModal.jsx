@@ -207,7 +207,7 @@ const CheckInModal = ({ date, existingData, onClose, onSave }) => {
                     <div className="step-view">
                         <h2>{existingData.status === 'success' ? 'Victory Secured' : 'Day Lost'}</h2>
                         <div className="quote-card" style={{ borderLeftColor: existingData.status === 'success' ? 'var(--success)' : 'var(--error)' }}>
-                            <p className="quote-text">"{existingData.journal}"</p>
+                            <p className="quote-text">"{existingData.journal || "No additional notes recorded."}"</p>
                         </div>
                         <p className="subtext">{new Date(existingData.timestamp).toLocaleTimeString()}</p>
                         <button className="btn-primary" onClick={onClose}>Close</button>
