@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Calendar.css';
 import DayCell from './DayCell';
-import CheckInModal from './CheckInModal';
-import { useProgress } from '../hooks/useProgress';
 
 const MONTHS_TO_SHOW = [
     new Date(2026, 1), // Feb
@@ -12,28 +10,17 @@ const MONTHS_TO_SHOW = [
     new Date(2026, 5), // Jun
     new Date(2026, 6), // Jul
     new Date(2026, 7), // Aug
-    new Date(2026, 8), // Sep (Added Sep as per user mention "aug 1 or sep")
+    new Date(2026, 8), // Sep
 ];
 
-const Calendar = () => {
-    const { entries, markDay, getDayStatus, streak } = useProgress();
-    const [selectedDate, setSelectedDate] = useState(null);
-
+const Calendar = ({ progress, streak, onDateClick }) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     const handleDayClick = (date) => {
         // Prevent clicking future days
         if (date > today) return;
-
-        // Open modal
-        setSelectedDate(date);
-    };
-
-    const handleSaveEntry = (date, status, journal) => {
-        const dateStr = date.toISOString().split('T')[0];
-        markDay(dateStr, status, journal);
-        setSelectedDate(null);
+        onDateClick(date);
     };
 
     return (
@@ -50,24 +37,16 @@ const Calendar = () => {
                         key={monthDate.getTime()}
                         monthDate={monthDate}
                         today={today}
-                        getDayStatus={getDayStatus}
+                        progress={progress}
                         onDayClick={handleDayClick}
                     />
                 ))}
             </div>
-
-            {selectedDate && (
-                <CheckInModal
-                    date={selectedDate}
-                    onClose={() => setSelectedDate(null)}
-                    onSave={handleSaveEntry}
-                />
-            )}
         </div>
     );
 };
 
-const MonthGrid = ({ monthDate, today, getDayStatus, onDayClick }) => {
+const MonthGrid = ({ monthDate, today, progress, onDayClick }) => {
     const year = monthDate.getFullYear();
     const month = monthDate.getMonth();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -83,7 +62,7 @@ const MonthGrid = ({ monthDate, today, getDayStatus, onDayClick }) => {
     for (let d = 1; d <= daysInMonth; d++) {
         const date = new Date(year, month, d);
         const dateStr = date.toISOString().split('T')[0];
-        const statusEntry = getDayStatus(dateStr);
+        const statusEntry = progress[dateStr]; // Direct access
         const isFuture = date > today;
 
         days.push(
