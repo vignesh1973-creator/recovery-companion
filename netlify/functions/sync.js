@@ -4,6 +4,9 @@ exports.handler = async (event, context) => {
     // 1. Connection Header (Secure way to get string)
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false // Required for some hosted Postgres providers from Serverless
+        }
     });
 
     try {
