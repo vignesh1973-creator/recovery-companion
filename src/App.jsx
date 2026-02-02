@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Calendar from './components/Calendar';
 import Countdown from './components/Countdown';
+import CheckInModal from './components/CheckInModal';
+import Sanctuary from './components/Sanctuary';
 import useProgress from './hooks/useProgress';
 import './App.css';
 import './components/Skeleton.css';
@@ -9,6 +11,7 @@ function App() {
   const { progress, saveDay, streak, targetDate } = useProgress();
   const [selectedDate, setSelectedDate] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('calendar'); // 'calendar' | 'sanctuary'
 
   useEffect(() => {
     // Simulate premium "boot up" time
@@ -24,6 +27,12 @@ function App() {
 
   const handleCloseModal = () => {
     setSelectedDate(null);
+  };
+
+  // Save logic helper
+  const handleSaveDay = (date, status, journal) => {
+    saveDay(date, status, journal);
+    handleCloseModal();
   };
 
   if (loading) {
@@ -50,13 +59,43 @@ function App() {
         <Countdown targetDate={targetDate} />
       </header>
 
-      <main>
-        <Calendar />
+      <main style={{ paddingBottom: '80px' }}>
+        {activeTab === 'calendar' ? (
+          <Calendar
+            progress={progress}
+            streak={streak}
+            onDateClick={handleDateClick}
+          />
+        ) : (
+          <Sanctuary />
+        )}
       </main>
 
-      <footer className="app-footer">
-        <p>Built for a friend. Feb 1 - Aug 1 Challenge.</p>
-      </footer>
+      {/* Bottom Navigation */}
+      <nav className="bottom-nav">
+        <button
+          className={`nav-item ${activeTab === 'calendar' ? 'active' : ''}`}
+          onClick={() => setActiveTab('calendar')}
+        >
+          <span className="nav-icon">📅</span>
+          <span className="nav-label">Tracker</span>
+        </button>
+        <button
+          className={`nav-item ${activeTab === 'sanctuary' ? 'active' : ''}`}
+          onClick={() => setActiveTab('sanctuary')}
+        >
+          <span className="nav-icon">🎧</span>
+          <span className="nav-label">Sanctuary</span>
+        </button>
+      </nav>
+
+      {selectedDate && (
+        <CheckInModal
+          date={selectedDate}
+          onClose={handleCloseModal}
+          onSave={handleSaveDay}
+        />
+      )}
     </div>
   );
 }

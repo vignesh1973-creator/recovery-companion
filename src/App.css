@@ -38,3 +38,9 @@ main {
   border-top: 1px solid var(--border-subtle);
   margin-top: var(--spacing-xl);
 }
+/* Bottom Navigation */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: black; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-around; padding: 10px 0 20px 0; z-index: 1000; backdrop-filter: blur(10px); }
+.nav-item { background: none; border: none; display: flex; flex-direction: column; align-items: center; color: var(--text-muted); cursor: pointer; width: 50%; transition: all 0.2s; }
+.nav-item.active { color: var(--accent-gold); }
+.nav-icon { font-size: 1.5rem; margin-bottom: 4px; }
+.nav-label { font-size: 0.8rem; font-weight: 500; }
