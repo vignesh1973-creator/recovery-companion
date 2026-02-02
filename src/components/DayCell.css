@@ -27,13 +27,13 @@
 .day-cell.success {
     background: rgba(34, 197, 94, 0.1);
     border: 1px solid var(--success);
-    cursor: default;
+    cursor: pointer;
 }
 
 .day-cell.fail {
     background: rgba(239, 68, 68, 0.1);
     border: 1px solid var(--error);
-    cursor: default;
+    cursor: pointer;
 }
 
 .day-number {
