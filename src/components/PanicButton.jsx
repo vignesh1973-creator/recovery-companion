@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './PanicButton.css';
 import UrgeSurfer from './UrgeSurfer';
 
-const PanicButton = ({ flares, onPanic, reasons, urgeSurfs, onIncrementSurf }) => {
+const PanicButton = ({ flares, onPanic, reasons = [], urgeSurfs, onIncrementSurf }) => {
     const [active, setActive] = useState(false);
     const [phase, setPhase] = useState('idle'); // idle -> wallet -> breathing -> distraction
     const [breathText, setBreathText] = useState('Ready');
