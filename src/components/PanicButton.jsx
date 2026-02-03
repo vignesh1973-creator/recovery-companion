@@ -3,39 +3,19 @@ import './PanicButton.css';
 
 const MAX_FLARES = 3;
 const DISTRACTION_VIDEOS = [
-    'j5a0jTc9S10', // Cute cat
-    'qC5KtatMcUw', // Satisfying slime
-    'S5AnWzjVtWY', // Nature relaxation
-    '5Peo-ivmupE'  // Funny animals
+    'q2n3pD8F9_A', // Tamil Love Melodies
+    'Nswk922_c9U', // Soothing & Feel-Good
+    's3e2v2Q0_E0', // Feel Good Songs
+    'q8z1t0pW1Y0', // Tamil Melody Songs
+    'UnYa3Rc2WvA', // AR Rahman Hits
+    'PRw4XPKoaDE'  // Ilayaraja Melodies
 ];
 
-const PanicButton = () => {
+const PanicButton = ({ flares, onPanic }) => {
     const [active, setActive] = useState(false);
     const [phase, setPhase] = useState('idle'); // idle -> breathing -> distraction
-    const [flaresLeft, setFlaresLeft] = useState(MAX_FLARES);
     const [breathText, setBreathText] = useState('Ready');
     const [currentVideo, setCurrentVideo] = useState(null);
-
-    // Load Flare Count
-    useEffect(() => {
-        const today = new Date();
-        const currentMonth = today.getMonth();
-        const storedMonth = localStorage.getItem('flare_month');
-
-        // Reset if new month
-        if (storedMonth && parseInt(storedMonth) !== currentMonth) {
-            localStorage.setItem('flare_count', MAX_FLARES);
-            localStorage.setItem('flare_month', currentMonth);
-            setFlaresLeft(MAX_FLARES);
-        } else {
-            const storedCount = localStorage.getItem('flare_count');
-            if (storedCount) setFlaresLeft(parseInt(storedCount));
-            else {
-                localStorage.setItem('flare_count', MAX_FLARES);
-                localStorage.setItem('flare_month', currentMonth);
-            }
-        }
-    }, []);
 
     const speak = (text) => {
         if ('speechSynthesis' in window) {
@@ -47,16 +27,14 @@ const PanicButton = () => {
     };
 
     const handlePanic = () => {
-        if (flaresLeft <= 0) {
+        if (flares <= 0) {
             alert("You have used all your Emergency Flares for this month. Stay strong.");
             return;
         }
 
         if (window.confirm("Use an Emergency Flare? This will force a 60s reset.")) {
-            // Deduct Flare
-            const newCount = flaresLeft - 1;
-            setFlaresLeft(newCount);
-            localStorage.setItem('flare_count', newCount);
+            // Deduct Flare via Prop
+            onPanic();
 
             setActive(true);
             startBreathing();
@@ -112,7 +90,7 @@ const PanicButton = () => {
     return (
         <>
             <button className="btn-panic" onClick={handlePanic}>
-                🚨 {flaresLeft}
+                🚨 {flares}
             </button>
 
             {active && (

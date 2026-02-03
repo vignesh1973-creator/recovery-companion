@@ -11,7 +11,7 @@ import './App.css';
 import './components/Skeleton.css';
 
 function App() {
-  const { progress, saveDay, streak, targetDate } = useProgress();
+  const { progress, saveDay, streak, targetDate, flares, decrementFlare } = useProgress();
   const [selectedDate, setSelectedDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [milestoneData, setMilestoneData] = useState(null);
@@ -83,7 +83,7 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <PanicButton />
+        <PanicButton flares={flares.count} onPanic={decrementFlare} />
         <h1>Recovery Companion</h1>
         <Countdown targetDate={targetDate} />
       </header>

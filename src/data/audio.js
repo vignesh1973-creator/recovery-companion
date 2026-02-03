@@ -4,15 +4,15 @@ export const audioLibrary = [
         playlists: [
             {
                 id: 'sp1',
-                title: "Beast Mode",
-                embedUrl: "https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator&theme=0",
-                deepLink: "spotify:playlist:37i9dQZF1DX76Wlfdnj7AP"
+                title: "Ultimate Motivation",
+                embedUrl: "https://open.spotify.com/embed/playlist/4Ky4vveGq77DAgV3Z2Lk4e?utm_source=generator&theme=0",
+                deepLink: "spotify:playlist:4Ky4vveGq77DAgV3Z2Lk4e"
             },
             {
                 id: 'sp2',
-                title: "Motivational Speech",
-                embedUrl: "https://open.spotify.com/embed/playlist/37i9dQZF1DXdxcBWuJkbcy?utm_source=generator&theme=0",
-                deepLink: "spotify:playlist:37i9dQZF1DXdxcBWuJkbcy"
+                title: "Tamil Beast Mode",
+                embedUrl: "https://open.spotify.com/embed/playlist/37i9dQZF1DX6fDqIq8gJc8?utm_source=generator&theme=0",
+                deepLink: "spotify:playlist:37i9dQZF1DX6fDqIq8gJc8"
             }
         ]
     },

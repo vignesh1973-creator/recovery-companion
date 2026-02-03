@@ -22,9 +22,24 @@ export const useProgress = () => {
         } catch { return {}; }
     });
 
-    const [targetDate, setTargetDate] = useState(() => {
-        const saved = localStorage.getItem(TARGET_DATE_KEY);
-        return saved ? new Date(saved) : new Date('2026-08-01T00:00:00');
+    // 1.5 Load Flares (Optimistic)
+    const [flares, setFlares] = useState(() => {
+        try {
+            const stored = JSON.parse(localStorage.getItem('recovery_flares'));
+            const currentMonth = new Date().getMonth();
+
+            // Default State
+            const defaultState = { count: 3, month: currentMonth };
+
+            if (stored) {
+                // Check if month changed since last save
+                if (stored.month !== currentMonth) {
+                    return defaultState; // Reset to 3
+                }
+                return stored;
+            }
+            return defaultState;
+        } catch { return { count: 3, month: new Date().getMonth() }; }
     });
 
     // 2. Initial Cloud Sync (On Mount)
@@ -41,6 +56,15 @@ export const useProgress = () => {
                         setProgress(cloudData.progress);
                         if (cloudData.targetDate) {
                             setTargetDate(new Date(cloudData.targetDate));
+                        }
+                        if (cloudData.flares) {
+                            // Check month validity on cloud data too
+                            const currentMonth = new Date().getMonth();
+                            if (cloudData.flares.month !== currentMonth) {
+                                setFlares({ count: 3, month: currentMonth });
+                            } else {
+                                setFlares(cloudData.flares);
+                            }
                         }
                     }
                 }
@@ -62,12 +86,17 @@ export const useProgress = () => {
         localStorage.setItem(TARGET_DATE_KEY, targetDate.toISOString());
     }, [targetDate]);
 
+    useEffect(() => {
+        localStorage.setItem('recovery_flares', JSON.stringify(flares));
+    }, [flares]);
+
     // Debounced Cloud Save
     useEffect(() => {
         const timer = setTimeout(() => {
             const payload = {
                 progress,
-                targetDate: targetDate.toISOString()
+                targetDate: targetDate.toISOString(),
+                flares
             };
 
             fetch(SYNC_API, {
@@ -80,7 +109,7 @@ export const useProgress = () => {
         }, 2000); // Wait 2s after last change before saving
 
         return () => clearTimeout(timer);
-    }, [progress, targetDate]);
+    }, [progress, targetDate, flares]);
 
 
     // 4. Extend Target Helper
@@ -90,6 +119,14 @@ export const useProgress = () => {
             newDate.setDate(newDate.getDate() + days);
             return newDate;
         });
+    };
+
+    // Helper: Use Flare
+    const decrementFlare = () => {
+        setFlares(prev => ({
+            ...prev,
+            count: Math.max(0, prev.count - 1)
+        }));
     };
 
     // 5. Auto-Fail Missed Days (On Mount)
@@ -178,6 +215,8 @@ export const useProgress = () => {
         progress,
         saveDay,
         streak: calculateStreak(),
-        targetDate
+        targetDate,
+        flares,
+        decrementFlare
     };
 };
