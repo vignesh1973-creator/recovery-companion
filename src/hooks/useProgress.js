@@ -62,6 +62,9 @@ export const useProgress = () => {
                         if (cloudData.targetDate) {
                             setTargetDate(new Date(cloudData.targetDate));
                         }
+                        if (cloudData.reasons) setReasons(cloudData.reasons);
+                        if (cloudData.urgeSurfs) setUrgeSurfs(cloudData.urgeSurfs);
+
                         if (cloudData.flares) {
                             // Check month validity on cloud data too
                             const currentMonth = new Date().getMonth();
@@ -95,13 +98,23 @@ export const useProgress = () => {
         localStorage.setItem('recovery_flares', JSON.stringify(flares));
     }, [flares]);
 
+    useEffect(() => {
+        localStorage.setItem('recovery_reasons', JSON.stringify(reasons));
+    }, [reasons]);
+
+    useEffect(() => {
+        localStorage.setItem('recovery_surfs', urgeSurfs.toString());
+    }, [urgeSurfs]);
+
     // Debounced Cloud Save
     useEffect(() => {
         const timer = setTimeout(() => {
             const payload = {
                 progress,
                 targetDate: targetDate.toISOString(),
-                flares
+                flares,
+                reasons,
+                urgeSurfs
             };
 
             fetch(SYNC_API, {
@@ -114,7 +127,7 @@ export const useProgress = () => {
         }, 2000); // Wait 2s after last change before saving
 
         return () => clearTimeout(timer);
-    }, [progress, targetDate, flares]);
+    }, [progress, targetDate, flares, reasons, urgeSurfs]);
 
 
     // 4. Extend Target Helper
@@ -222,6 +235,11 @@ export const useProgress = () => {
         streak: calculateStreak(),
         targetDate,
         flares,
-        decrementFlare
+        decrementFlare,
+        reasons,
+        addReason,
+        deleteReason,
+        urgeSurfs,
+        incrementSurf
     };
 };

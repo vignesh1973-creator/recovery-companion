@@ -1,7 +1,17 @@
-.btn-panic {
+.panic-controls {
     position: absolute;
     top: 1rem;
     right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 1000;
+}
+
+.btn-panic {
+    position: relative;
+    /* Reset absolute */
+    top: auto;
+    right: auto;
     background: rgba(239, 68, 68, 0.2);
     border: 1px solid var(--error);
     color: var(--error);
@@ -10,8 +20,27 @@
     cursor: pointer;
     font-weight: bold;
     font-size: 0.9rem;
-    z-index: 1000;
     animation: pulseRed 2s infinite;
+}
+
+.btn-surf {
+    background: rgba(14, 165, 233, 0.2);
+    border: 1px solid #0ea5e9;
+    color: #0ea5e9;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.btn-surf:hover {
+    background: rgba(14, 165, 233, 0.4);
+    transform: scale(1.05);
 }
 
 @keyframes pulseRed {
@@ -84,4 +113,50 @@
 .distraction-container h2 {
     color: var(--accent-gold);
     margin-bottom: var(--spacing-lg);
+}
+
+/* WALLET FLASH CARDS */
+.wallet-flash-container {
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.wallet-flash-container h2 {
+    color: #94a3b8;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.flash-card {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: white;
+    font-style: italic;
+    margin-bottom: 3rem;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flash-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

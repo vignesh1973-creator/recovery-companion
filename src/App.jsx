@@ -4,6 +4,7 @@ import Countdown from './components/Countdown';
 import CheckInModal from './components/CheckInModal';
 import Sanctuary from './components/Sanctuary';
 import PanicButton from './components/PanicButton';
+import WalletModal from './components/WalletModal';
 import { useProgress } from './hooks/useProgress';
 import MilestoneModal from './components/MilestoneModal';
 import { getMilestone } from './data/milestones';
@@ -11,9 +12,16 @@ import './App.css';
 import './components/Skeleton.css';
 
 function App() {
-  const { progress, saveDay, streak, targetDate, flares, decrementFlare } = useProgress();
+  const {
+    progress, saveDay, streak, targetDate,
+    flares, decrementFlare,
+    reasons, addReason, deleteReason,
+    urgeSurfs, incrementSurf
+  } = useProgress();
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showWallet, setShowWallet] = useState(false);
   const [milestoneData, setMilestoneData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('calendar'); // 'calendar' | 'sanctuary'
@@ -83,7 +91,18 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <PanicButton flares={flares.count} onPanic={decrementFlare} />
+        <button className="btn-icon header-wallet-btn" onClick={() => setShowWallet(true)} title="Reason Wallet">
+          ❤️
+        </button>
+
+        <PanicButton
+          flares={flares.count}
+          onPanic={decrementFlare}
+          reasons={reasons}
+          urgeSurfs={urgeSurfs}
+          onIncrementSurf={incrementSurf}
+        />
+
         <h1>Recovery Companion</h1>
         <Countdown targetDate={targetDate} />
       </header>
@@ -133,6 +152,15 @@ function App() {
           type={milestoneData.type}
           data={milestoneData}
           onClose={() => setMilestoneData(null)}
+        />
+      )}
+
+      {showWallet && (
+        <WalletModal
+          reasons={reasons}
+          onAdd={addReason}
+          onDelete={deleteReason}
+          onClose={() => setShowWallet(false)}
         />
       )}
     </div>
