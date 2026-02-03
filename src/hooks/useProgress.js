@@ -22,6 +22,11 @@ export const useProgress = () => {
         } catch { return {}; }
     });
 
+    const [targetDate, setTargetDate] = useState(() => {
+        const saved = localStorage.getItem(TARGET_DATE_KEY);
+        return saved ? new Date(saved) : new Date('2026-08-01T00:00:00');
+    });
+
     // 1.5 Load Flares (Optimistic)
     const [flares, setFlares] = useState(() => {
         try {
