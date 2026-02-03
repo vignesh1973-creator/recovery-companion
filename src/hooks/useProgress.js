@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 const STORAGE_KEY = 'recovery_progress';
 const TARGET_DATE_KEY = 'recovery_target_date';
-const SYNC_API = '/.netlify/functions/sync';
+const SYNC_API = '/api/sync';
 
 export const useProgress = () => {
     // 1. Load Progress (Optimistic UI: Load Local first, then BG Sync)
