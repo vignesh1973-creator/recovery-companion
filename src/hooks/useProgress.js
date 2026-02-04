@@ -47,6 +47,20 @@ export const useProgress = () => {
         } catch { return { count: 3, month: new Date().getMonth() }; }
     });
 
+    // 1.6 Load Wallet & Stats
+    const [reasons, setReasons] = useState(() => {
+        try {
+            const stored = JSON.parse(localStorage.getItem('recovery_reasons'));
+            return stored || [];
+        } catch { return []; }
+    });
+
+    const [urgeSurfs, setUrgeSurfs] = useState(() => {
+        try {
+            return parseInt(localStorage.getItem('recovery_surfs')) || 0;
+        } catch { return 0; }
+    });
+
     // 2. Initial Cloud Sync (On Mount)
     useEffect(() => {
         const syncFromCloud = async () => {
