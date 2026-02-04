@@ -1,45 +1,53 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './UrgeSurfer.css';
 
-// Using a more reliable direct MP3 link for ocean sounds
+// Using Google Actions Nature Sounds (Reliable CDN)
 const OCEAN_SOUND_URL = "https://actions.google.com/sounds/v1/nature/ocean_waves_large_loop.ogg";
 
 const UrgeSurfer = ({ onComplete, onCancel }) => {
     const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
     const [isActive, setIsActive] = useState(true);
-    const [isMuted, setIsMuted] = useState(false);
-    const audioRef = useRef(new Audio(OCEAN_SOUND_URL));
+    const [isMuted, setIsMuted] = useState(false); // Default to false, but might need interaction
+    const audioRef = useRef(null);
 
     useEffect(() => {
-        // Start Audio
+        // Attempt Autoplay on mount
         const audio = audioRef.current;
-        audio.loop = true;
-        audio.volume = 0.5;
+        if (audio) {
+            audio.volume = 0.6;
+            const playPromise = audio.play();
 
-        const playPromise = audio.play();
-
-        if (playPromise !== undefined) {
-            playPromise.catch(e => {
-                console.log("Autoplay prevented:", e);
-                // We keep it muted visually if autoplay fails
-                setIsMuted(true);
-            });
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Autoplay prevented. User interaction required.");
+                    setIsMuted(true); // Reflect state
+                });
+            }
         }
 
         return () => {
-            audio.pause();
-            audio.currentTime = 0;
+            if (audio) {
+                audio.pause();
+                audio.currentTime = 0;
+            }
         };
     }, []);
 
-    useEffect(() => {
+    const toggleSound = () => {
         const audio = audioRef.current;
+        if (!audio) return;
+
         if (isMuted) {
-            audio.pause();
+            // Unmute -> Try to play
+            audio.play().then(() => {
+                setIsMuted(false);
+            }).catch(e => console.error("Play error:", e));
         } else {
-            audio.play().catch(e => console.error("Play failed", e));
+            // Mute -> Pause
+            audio.pause();
+            setIsMuted(true);
         }
-    }, [isMuted]);
+    };
 
     useEffect(() => {
         let interval = null;
@@ -50,7 +58,6 @@ const UrgeSurfer = ({ onComplete, onCancel }) => {
         } else if (timeLeft === 0) {
             // Success!
             setIsActive(false);
-            audioRef.current.pause();
             onComplete();
         }
         return () => clearInterval(interval);
@@ -62,14 +69,13 @@ const UrgeSurfer = ({ onComplete, onCancel }) => {
         return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     };
 
-    const toggleSound = () => {
-        setIsMuted(!isMuted);
-    };
-
     return (
         <div className="urge-surfer-overlay">
+            {/* Audio Element */}
+            <audio ref={audioRef} src={OCEAN_SOUND_URL} loop preload="auto" />
+
             <button className="sound-toggle" onClick={toggleSound}>
-                {isMuted ? '🔇 Unmute' : '🔊 Mute'}
+                {isMuted ? '🔇 Unmute Sound' : '🔊 Mute Sound'}
             </button>
 
             <div className="wave-bg">

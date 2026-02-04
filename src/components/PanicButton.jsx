@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './PanicButton.css';
 import UrgeSurfer from './UrgeSurfer';
 
-const PanicButton = ({ flares, onPanic, reasons = [], urgeSurfs, onIncrementSurf }) => {
+const PanicButton = ({ flares, onPanic, reasons = [], urgeSurfs, onIncrementSurf, onOpenWallet }) => {
     const [active, setActive] = useState(false);
     const [phase, setPhase] = useState('idle'); // idle -> wallet -> breathing -> distraction
     const [breathText, setBreathText] = useState('Ready');
@@ -114,6 +114,11 @@ const PanicButton = ({ flares, onPanic, reasons = [], urgeSurfs, onIncrementSurf
     return (
         <>
             <div className="panic-controls">
+                {/* Wallet Button - Moved here */}
+                <button className="btn-wallet-ctrl" onClick={onOpenWallet} title="Reason Wallet">
+                    ❤️
+                </button>
+
                 {/* Surf Button */}
                 <button className="btn-surf" onClick={() => setShowSurfer(true)}>
                     🌊
