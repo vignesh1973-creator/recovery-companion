@@ -1,23 +1,45 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './UrgeSurfer.css';
 
+// Using a more reliable direct MP3 link for ocean sounds
+const OCEAN_SOUND_URL = "https://actions.google.com/sounds/v1/nature/ocean_waves_large_loop.ogg";
+
 const UrgeSurfer = ({ onComplete, onCancel }) => {
-    const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
+    const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
     const [isActive, setIsActive] = useState(true);
-    const audioRef = useRef(new Audio('https://cdn.pixabay.com/download/audio/2021/08/09/audio_88447e769f.mp3?filename=ocean-waves-112906.mp3'));
+    const [isMuted, setIsMuted] = useState(false);
+    const audioRef = useRef(new Audio(OCEAN_SOUND_URL));
 
     useEffect(() => {
         // Start Audio
         const audio = audioRef.current;
         audio.loop = true;
         audio.volume = 0.5;
-        audio.play().catch(e => console.log("Audio play failed (user interaction needed first)", e));
+
+        const playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+            playPromise.catch(e => {
+                console.log("Autoplay prevented:", e);
+                // We keep it muted visually if autoplay fails
+                setIsMuted(true);
+            });
+        }
 
         return () => {
             audio.pause();
             audio.currentTime = 0;
         };
     }, []);
+
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (isMuted) {
+            audio.pause();
+        } else {
+            audio.play().catch(e => console.error("Play failed", e));
+        }
+    }, [isMuted]);
 
     useEffect(() => {
         let interval = null;
@@ -40,8 +62,16 @@ const UrgeSurfer = ({ onComplete, onCancel }) => {
         return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     };
 
+    const toggleSound = () => {
+        setIsMuted(!isMuted);
+    };
+
     return (
         <div className="urge-surfer-overlay">
+            <button className="sound-toggle" onClick={toggleSound}>
+                {isMuted ? '🔇 Unmute' : '🔊 Mute'}
+            </button>
+
             <div className="wave-bg">
                 <div className="wave wave1"></div>
                 <div className="wave wave2"></div>

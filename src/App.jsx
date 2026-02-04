@@ -91,16 +91,13 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <button className="btn-icon header-wallet-btn" onClick={() => setShowWallet(true)} title="Reason Wallet">
-          ❤️
-        </button>
-
         <PanicButton
           flares={flares.count}
           onPanic={decrementFlare}
           reasons={reasons}
           urgeSurfs={urgeSurfs}
           onIncrementSurf={incrementSurf}
+          onOpenWallet={() => setShowWallet(true)}
         />
 
         <h1>Recovery Companion</h1>
