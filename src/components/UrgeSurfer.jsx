@@ -17,20 +17,31 @@ const UrgeSurfer = ({ onComplete, onCancel }) => {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             if (!AudioContext) return;
 
-            const ctx = new AudioContext();
-            audioContextRef.current = ctx;
+            // Reuse context if exists, or create new
+            let ctx = audioContextRef.current;
+            if (!ctx) {
+                ctx = new AudioContext();
+                audioContextRef.current = ctx;
+            }
+
+            // Resume context (CRITICAL for browser autoplay policies)
+            if (ctx.state === 'suspended') {
+                ctx.resume();
+            }
 
             // 1. Create Brown Noise (Deep rumbling)
+            // Fix: Declare lastOut OUTSIDE the loop
             const bufferSize = 2 * ctx.sampleRate;
             const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
+
+            let lastOut = 0;
             for (let i = 0; i < bufferSize; i++) {
                 const white = Math.random() * 2 - 1;
                 output[i] = (lastOut + (0.02 * white)) / 1.02;
                 lastOut = output[i];
                 output[i] *= 3.5; // Compensate for gain
             }
-            let lastOut = 0;
 
             const noise = ctx.createBufferSource();
             noise.buffer = noiseBuffer;
@@ -72,12 +83,6 @@ const UrgeSurfer = ({ onComplete, onCancel }) => {
         // Fade in
         gainNode.gain.linearRampToValueAtTime(0.1, t + 2); // Base noise
 
-        // Cyclic Waves
-        // We can't easily loop automation, so we set an interval to 'push' new waves
-        // Or just let brown noise exist for now as a constant soothe, 
-        // simpler is better for stability.
-        // Let's do a simple "breathing" wave
-
         const cycle = 10; // seconds
 
         const scheduleWave = (startTime) => {
@@ -87,8 +92,8 @@ const UrgeSurfer = ({ onComplete, onCancel }) => {
             gainNode.gain.linearRampToValueAtTime(0.1, startTime + cycle);
         };
 
-        // Schedule first few waves
-        for (let i = 0; i < 60; i++) { // 10 minutes of waves
+        // Schedule waves for the duration
+        for (let i = 0; i < 65; i++) {
             scheduleWave(t + (i * cycle));
         }
     };
@@ -96,16 +101,26 @@ const UrgeSurfer = ({ onComplete, onCancel }) => {
     const stopOceanSound = () => {
         if (gainNodeRef.current && audioContextRef.current) {
             // Fade out
-            gainNodeRef.current.gain.linearRampToValueAtTime(0, audioContextRef.current.currentTime + 1);
-            setTimeout(() => {
-                if (audioContextRef.current) audioContextRef.current.close();
-                audioContextRef.current = null;
-            }, 1000);
+            try {
+                const t = audioContextRef.current.currentTime;
+                gainNodeRef.current.gain.cancelScheduledValues(t);
+                gainNodeRef.current.gain.linearRampToValueAtTime(0, t + 1);
+
+                setTimeout(() => {
+                    if (noiseNodeRef.current) {
+                        noiseNodeRef.current.stop();
+                        noiseNodeRef.current.disconnect();
+                    }
+                    // Don't close context, just stop sound to allow restart
+                }, 1000);
+            } catch (e) {
+                console.warn("Error stopping audio:", e);
+            }
         }
     };
 
     const toggleSound = () => {
-        if (isMuted || !audioContextRef.current) {
+        if (isMuted) {
             // Unmute / Start
             startOceanSound();
         } else {
@@ -115,13 +130,14 @@ const UrgeSurfer = ({ onComplete, onCancel }) => {
         }
     };
 
-    // Auto-start check (often blocked, but worth a try)
+    // Auto-start check 
     useEffect(() => {
-        // We default to Muted state so user MUST interact to start sound
-        // This avoids the browser warning and "broken" feel.
         setIsMuted(true);
-
-        return () => stopOceanSound();
+        return () => {
+            if (audioContextRef.current) {
+                audioContextRef.current.close().catch(e => console.warn(e));
+            }
+        };
     }, []);
 
     // Timer Logic
@@ -132,6 +148,7 @@ const UrgeSurfer = ({ onComplete, onCancel }) => {
                 setTimeLeft(timeLeft => timeLeft - 1);
             }, 1000);
         } else if (timeLeft === 0) {
+            // Success!
             setIsActive(false);
             stopOceanSound();
             onComplete();
