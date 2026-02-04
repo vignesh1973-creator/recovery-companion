@@ -147,6 +147,13 @@ export const useProgress = () => {
         }));
     };
 
+    // Helper: Wallet
+    const addReason = (text) => setReasons(prev => [...prev, text]);
+    const deleteReason = (index) => setReasons(prev => prev.filter((_, i) => i !== index));
+
+    // Helper: Surf
+    const incrementSurf = () => setUrgeSurfs(prev => prev + 1);
+
     // 5. Auto-Fail Missed Days (On Mount)
     useEffect(() => {
         const checkMissed = () => {
